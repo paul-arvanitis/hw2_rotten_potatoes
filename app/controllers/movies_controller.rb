@@ -13,8 +13,26 @@ class MoviesController < ApplicationController
     elsif !params[:sort_by_date].nil?
        @movies = Movie.find(:all , :order => 'release_date')
        @date_hilite=true
+    elsif !params[:ratings].nil?
+       @movies = Movie.where('rating' => params[:ratings].keys)
     else
        @movies = Movie.all
+    end
+    @ratings = Movie.select('rating')
+    @all_ratings=[]
+    @ratings.each {|i| @all_ratings.push i.rating}
+    @all_ratings.uniq!
+
+    if !params[:ratings].nil?
+	@checked_ratings = params[:ratings].keys
+	session[:ratings] = @checked_ratings
+    else
+	if !session[:ratings].nil?
+	   @checked_ratings = session[:ratings]
+	else
+	   @checked_ratings = @all_ratings
+	   session[:ratings] = @checked_ratings
+	end
     end
   end
 
