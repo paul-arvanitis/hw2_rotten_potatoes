@@ -24,33 +24,31 @@ class MoviesController < ApplicationController
         end
       end
 
-      @sort = nil
+      sort = nil
       unless params[:sort_by_title].nil?
-        @sort = :sort_by_title
+        sort = :sort_by_title
         session[:sort_by_title] = :asc
         session.delete(:sort_by_date)
       else
-        @sort = :sort_by_title unless session[:sort_by_title].nil?
+        sort = :sort_by_title unless session[:sort_by_title].nil?
       end
 
       unless params[:sort_by_date].nil?
-        @sort = :sort_by_date
+        sort = :sort_by_date
         session[:sort_by_date] = :asc
         session.delete(:sort_by_title)
       else
-        @sort = :sort_by_date unless session[:sort_by_date].nil?
+        sort = :sort_by_date unless session[:sort_by_date].nil?
       end
 
-      if @sort == :sort_by_title
-        @movies = Movie.find(:all , :conditions => {'rating' => @checked_ratings}, :order => 'title')
-        #@movies = Movie.where('rating' => @checked_ratings).order('title' => :asc)
-        @title_hilite=true
-      elsif @sort == :sort_by_date
-        @movies = Movie.find(:all , :conditions => {'rating' => @checked_ratings}, :order => 'release_date')
-        #@movies = Movie.where('rating' => @checked_ratings).order('release_date' => :asc)
-	@date_hilite=true
+      if sort == :sort_by_title 
+	@movies=Movie.find(:all, :conditions => {'rating' => @checked_ratings}, :order => 'title')
+        @title_hilite = true
+      elsif sort == :sort_by_date
+	@movies=Movie.find(:all, :conditions => {'rating' => @checked_ratings}, :order => 'release_date')
+	@date_hilite = true
       else
-        @movies = Movie.where('rating' => @checked_ratings)
+        @movies=Movie.where('ratings' => @checked_ratings)
       end
 
   end
